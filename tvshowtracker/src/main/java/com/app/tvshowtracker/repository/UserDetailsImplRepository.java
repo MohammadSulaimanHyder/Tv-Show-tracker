@@ -10,6 +10,6 @@ import com.app.tvshowtracker.model.UserDetailsImpl;
 @Repository
 public interface UserDetailsImplRepository extends JpaRepository<UserDetailsImpl, Long>{
 	
-	public Optional<UserDetailsImpl> findByUserId();
-
+	public Optional<UserDetailsImpl> findByUserId(String userId);
+	
 }
