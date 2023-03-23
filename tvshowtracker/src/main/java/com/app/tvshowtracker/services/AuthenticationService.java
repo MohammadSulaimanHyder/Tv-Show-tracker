@@ -8,20 +8,22 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 import com.app.tvshowtracker.dto.AuthRequest;
 import com.app.tvshowtracker.dto.AuthResponse;
-import com.app.tvshowtracker.dto.LogoutRequest;
+import com.app.tvshowtracker.dto.RegRequest;
+import com.app.tvshowtracker.dto.RegResponse;
 import com.app.tvshowtracker.model.UserDetailsImpl;
 import com.app.tvshowtracker.repository.UserDetailsImplRepository;
 import com.app.tvshowtracker.securityconfig.JwtUtilService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 
 
 
@@ -64,6 +66,30 @@ public class AuthenticationService {
 		}
 		
 		return "{\"status\":\"Succesfull\"}";
+	}
+	
+	@Transactional
+	public RegResponse signUp(RegRequest regRequest) {
+		
+		UserDetailsImpl userDetails = new UserDetailsImpl();
+		
+		userDetails.setUserId(regRequest.getUserId());
+		userDetails.setPassword(new BCryptPasswordEncoder().encode(regRequest.getPassword()));
+		userDetails.setFirstName(regRequest.getFirstName());
+		userDetails.setLastName(regRequest.getLastName());
+		userDetails.setEmail(regRequest.getEmail());
+		
+		if(userDetailsRepo.findByUserId(regRequest.getUserId()).isPresent()) {
+			return new RegResponse(userDetails.getUsername(), 
+					"User - " + regRequest.getUserId() + " already exists. Please try with a diffrent user name.");
+		} else {
+			userDetailsRepo.save(userDetails);
+		}
+	
+		
+		//Need to send registration email here and create verification token.
+		
+		return new RegResponse(userDetails.getUsername(), "Success - Account has been registered.");
 	}
 
 }

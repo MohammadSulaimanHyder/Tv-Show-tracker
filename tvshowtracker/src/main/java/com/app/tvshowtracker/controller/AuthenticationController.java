@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.tvshowtracker.dto.AuthRequest;
 import com.app.tvshowtracker.dto.AuthResponse;
-import com.app.tvshowtracker.dto.LogoutRequest;
 import com.app.tvshowtracker.dto.RegRequest;
 import com.app.tvshowtracker.dto.RegResponse;
 import com.app.tvshowtracker.services.AuthenticationService;
@@ -43,10 +42,11 @@ public class AuthenticationController {
 	
 	
 	@PostMapping("/usersignup")
-	public ResponseEntity<RegResponse> login(@RequestBody RegRequest regResponse) {
+	public ResponseEntity<RegResponse> signUp(@RequestBody RegRequest regRequest) {
 		
+		RegResponse regResponse = authenticationService.signUp(regRequest);
 		
-		return null;
+		return new ResponseEntity<RegResponse>(regResponse, HttpStatus.OK);
 	}
 	
 	
