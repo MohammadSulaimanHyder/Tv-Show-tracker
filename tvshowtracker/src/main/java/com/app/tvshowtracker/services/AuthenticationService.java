@@ -36,6 +36,10 @@ public class AuthenticationService {
 	JwtUtilService jwtUtilService;
 	@Autowired
 	private UserDetailsImplRepository userDetailsRepo;
+	@Autowired
+	MailService mailService;
+	@Autowired
+	OtpService otpService;
 	
 	public AuthResponse userLogin(AuthRequest authRequest) {
 		
@@ -85,11 +89,17 @@ public class AuthenticationService {
 		} else {
 			userDetailsRepo.save(userDetails);
 		}
+		
+		String token = otpService.generateRegistrationToken(userDetails.getUserId());
+		mailService.sendRegistrationMail(userDetails, token);
+		
+		return new RegResponse(userDetails.getUsername(), "Success - Account has been created. "
+				+ "Please check your email for acount verification link.");
+	}
 	
+	public String verifyAccount(String token, String userId) {
 		
-		//Need to send registration email here and create verification token.
-		
-		return new RegResponse(userDetails.getUsername(), "Success - Account has been registered.");
+		return otpService.verifyRegistrationToken(token, userId);
 	}
 
 }
