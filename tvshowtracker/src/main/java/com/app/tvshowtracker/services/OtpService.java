@@ -19,7 +19,7 @@ public class OtpService {
 	@Transactional
 	public String generateRegistrationToken(String userId) {
 		
-		String token = new Random().ints(6, 0, 10).mapToObj(Integer::toString)
+		String token = new Random().ints(4, 0, 10).mapToObj(Integer::toString)
 			    .reduce((a, b) -> a + b).get();
 		
 		TokenVerification tokenObj = new TokenVerification(token, userId, new Date());
@@ -38,7 +38,7 @@ public class OtpService {
 		if(updatedToken.get().getVerfied()) {
 			return "User Account Activated Successfully.";
 		} else {
-			return "User Account Activation failed. Please try later or contact admin.";
+			return "User Account Activation failed. Please try again later or contact admin.";
 		}
 	}
 

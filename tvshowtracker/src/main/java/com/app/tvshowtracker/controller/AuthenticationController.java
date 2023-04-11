@@ -56,8 +56,4 @@ public class AuthenticationController {
 		
 		return new ResponseEntity<String>(response, HttpStatus.OK);
 	}
-	
-	
-	
-
 }
