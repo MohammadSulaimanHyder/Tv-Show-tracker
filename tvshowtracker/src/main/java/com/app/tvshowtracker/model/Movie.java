@@ -35,7 +35,10 @@ public class Movie {
 	
 	private List<String> cast; 
 	
-	@OneToMany(mappedBy = "movie")
+	//mappedBy here will override the default implementation which will create a third table with movie and posts.
+	//With this it states that which ever class is creating the relationship, let them handle the movie and posts.
+	//No post column will be added in the movie table.
+	@OneToMany(mappedBy = "movie") 
 	private List<Post> posts;
 	
 	private int noOfAdded;

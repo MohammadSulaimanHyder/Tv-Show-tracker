@@ -33,8 +33,8 @@ public class Post {
 	private List<Comment> comments;
 		
 	@ManyToOne
-	@JoinColumn(name = "movieId", nullable = false)
-	private Movie movie;
+	@JoinColumn(name = "movieId", nullable = false) // will create a bidirectional relationship with movie.
+	private Movie movie; // This will add a movie column in the table.
 	
 	
 	public Post() {
