@@ -3,6 +3,10 @@ package com.app.tvshowtracker.model;
 import java.util.List;
 import java.util.Random;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,8 +35,8 @@ public class Post {
 	
 	@OneToMany(mappedBy = "post")
 	private List<Comment> comments;
-		
-	@ManyToOne
+	
+	@ManyToOne(cascade = CascadeType.ALL, targetEntity = Movie.class)
 	@JoinColumn(name = "movieId", nullable = false) // will create a bidirectional relationship with movie.
 	private Movie movie; // This will add a movie column in the table.
 	
@@ -92,7 +96,7 @@ public class Post {
 	public void setComments(List<Comment> comments) {
 		this.comments = comments;
 	}
-
+	
 	public Movie getMovie() {
 		return movie;
 	}

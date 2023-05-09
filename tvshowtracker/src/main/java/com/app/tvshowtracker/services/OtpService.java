@@ -5,12 +5,14 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.app.tvshowtracker.model.TokenVerification;
 import com.app.tvshowtracker.repository.TokenVerificationRepository;
 
 import jakarta.transaction.Transactional;
 
+@Service
 public class OtpService {
 	
 	@Autowired
