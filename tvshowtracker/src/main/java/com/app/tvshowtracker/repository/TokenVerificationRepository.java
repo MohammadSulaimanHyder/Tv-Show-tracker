@@ -21,8 +21,8 @@ public interface TokenVerificationRepository extends JpaRepository<TokenVerifica
 	
 	@Modifying
 	@Transactional
-	@Query("update TokenVerification set verfied=ture, verfiedOn =:verfiedOn "
-			+ "where userId= :userId and token =:token")
+	@Query(value = "update TokenVerification set verfied=ture, verfiedOn =:verfiedOn "
+			+ "where userId= :userId and token =:token", nativeQuery = true)
 	public int updateTokenVerifiedByUserId(Date verfiedOn, String userId, String token);
 
 }
