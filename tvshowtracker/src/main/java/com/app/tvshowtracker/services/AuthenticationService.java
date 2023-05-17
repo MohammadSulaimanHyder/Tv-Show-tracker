@@ -2,9 +2,11 @@ package com.app.tvshowtracker.services;
 
 
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 
-
+import com.app.tvshowtracker.customException.TvShowTrackerException;
 import com.app.tvshowtracker.dto.AuthRequest;
 import com.app.tvshowtracker.dto.AuthResponse;
 import com.app.tvshowtracker.dto.RegRequest;
@@ -43,22 +45,23 @@ public class AuthenticationService {
 	
 	public AuthResponse userLogin(AuthRequest authRequest) {
 		
-		authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(authRequest.getUserId(), authRequest.getPassword()));
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authRequest.getUserId(), authRequest.getPassword()));
+		} catch(BadCredentialsException e) {
+			new TvShowTrackerException("", e);
+			return new AuthResponse("", authRequest.getUserId(), "Failed - Invalid Credentials");
+		}
 		
 		Optional<UserDetailsImpl> userDetails = userDetailsRepo.findByUserId(authRequest.getUserId());
-		
-		AuthResponse authResponse = null;
 		
 		if(userDetails.isPresent()) {
 			String jwtToken = jwtUtilService.generateToken(null, userDetails.get());
 			
-			authResponse = new AuthResponse(jwtToken, userDetails.get().getUsername(), "Succesfull");
+			return new AuthResponse(jwtToken, userDetails.get().getUsername(), "Succesfull");
 		} else {
-			authResponse = new AuthResponse("", userDetails.get().getUsername(), "Failed");
+			return new AuthResponse("", userDetails.get().getUsername(), "Failed - User does not exist");
 		}
-		
-		return authResponse;
 	}
 	
 	public String logout(HttpServletRequest request, HttpServletResponse response) {
