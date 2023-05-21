@@ -1,6 +1,7 @@
 package com.app.tvshowtracker.services;
 
 
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -19,6 +20,7 @@ import com.app.tvshowtracker.dto.AuthRequest;
 import com.app.tvshowtracker.dto.AuthResponse;
 import com.app.tvshowtracker.dto.RegRequest;
 import com.app.tvshowtracker.dto.RegResponse;
+import com.app.tvshowtracker.enums.Roles;
 import com.app.tvshowtracker.model.UserDetailsImpl;
 import com.app.tvshowtracker.repository.UserDetailsImplRepository;
 import com.app.tvshowtracker.securityconfig.JwtUtilService;
@@ -50,17 +52,17 @@ public class AuthenticationService {
 					new UsernamePasswordAuthenticationToken(authRequest.getUserId(), authRequest.getPassword()));
 		} catch(BadCredentialsException e) {
 			new TvShowTrackerException("", e);
-			return new AuthResponse("", authRequest.getUserId(), "Failed - Invalid Credentials");
+			return new AuthResponse(authRequest.getUserId(), "", "Failed - Invalid Credentials");
 		}
 		
 		Optional<UserDetailsImpl> userDetails = userDetailsRepo.findByUserId(authRequest.getUserId());
 		
 		if(userDetails.isPresent()) {
-			String jwtToken = jwtUtilService.generateToken(null, userDetails.get());
+			String jwtToken = jwtUtilService.generateToken(new HashMap<String, Object>(), userDetails.get());
 			
-			return new AuthResponse(jwtToken, userDetails.get().getUsername(), "Succesfull");
+			return new AuthResponse(userDetails.get().getUsername(), jwtToken, "Succesfull");
 		} else {
-			return new AuthResponse("", userDetails.get().getUsername(), "Failed - User does not exist");
+			return new AuthResponse(userDetails.get().getUsername(), "", "Failed - Something went wrong. Please retry later.");
 		}
 	}
 	
@@ -85,6 +87,7 @@ public class AuthenticationService {
 		userDetails.setFirstName(regRequest.getFirstName());
 		userDetails.setLastName(regRequest.getLastName());
 		userDetails.setEmail(regRequest.getEmail());
+		userDetails.setRole(Roles.USER);
 		
 		if(userDetailsRepo.findByUserId(regRequest.getUserId()).isPresent()) {
 			return new RegResponse(userDetails.getUsername(), 
