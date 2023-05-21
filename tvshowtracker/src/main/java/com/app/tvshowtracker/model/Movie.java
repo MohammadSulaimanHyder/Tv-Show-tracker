@@ -21,7 +21,7 @@ public class Movie {
 	
 	private String poster;
 	
-	private String name;
+	private String movieName;
 	
 	private String duration;
 	
@@ -60,7 +60,7 @@ public class Movie {
 		
 		this.movieId = movieId;
 		this.poster = poster;
-		this.name = name;
+		this.movieName = name;
 		this.duration = duration;
 		this.releaseDate = releaseDate;
 		this.ratings = ratings;
@@ -94,11 +94,11 @@ public class Movie {
 	}
 
 	public String getName() {
-		return name;
+		return movieName;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.movieName = name;
 	}
 
 	public String getDuration() {
