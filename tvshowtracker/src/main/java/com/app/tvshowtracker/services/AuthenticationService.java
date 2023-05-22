@@ -3,7 +3,9 @@ package com.app.tvshowtracker.services;
 
 import java.util.HashMap;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,6 +47,20 @@ public class AuthenticationService {
 	@Autowired
 	OtpService otpService;
 	
+	private Predicate<String> pswdInFormat = (password) -> {
+		
+		Pattern letter = Pattern.compile("[a-zA-z]");
+        Pattern digit = Pattern.compile("[0-9]");
+        Pattern special = Pattern.compile("[.!@#$%&*()_+=|<>?{}\\[\\]~-]");
+        
+        Matcher hasLetter = letter.matcher(password);
+        Matcher hasDigit = digit.matcher(password);
+        Matcher hasSpecial = special.matcher(password);
+        
+        return hasLetter.find() && hasDigit.find() 
+        		&& hasSpecial.find() && password.length() >= 8;
+	};
+	
 	public AuthResponse userLogin(AuthRequest authRequest) {
 		
 		try {
@@ -79,6 +95,12 @@ public class AuthenticationService {
 	
 	@Transactional
 	public RegResponse signUp(RegRequest regRequest) {
+		
+		if(!pswdInFormat.test(regRequest.getPassword())) {
+			return new RegResponse("", "Failed - Password is not as per the Policy. Make sure"
+					+ "password entered has a Capital, Number and special characters. Length"
+					+ "should be atleast 8 characters long.");
+		}
 		
 		UserDetailsImpl userDetails = new UserDetailsImpl();
 		
