@@ -3,9 +3,6 @@ package com.app.tvshowtracker.model;
 import java.util.List;
 import java.util.Random;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Post {
+public class MoviePost {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,19 +30,19 @@ public class Post {
 	
 	private List<String> images;
 	
-	@OneToMany(mappedBy = "post")
+	@OneToMany(mappedBy = "moviePost")
 	private List<Comment> comments;
 	
 	@ManyToOne(cascade = CascadeType.ALL, targetEntity = Movie.class)
-	@JoinColumn(name = "movieId", nullable = false) // will create a bidirectional relationship with movie.
+	@JoinColumn(name = "movie", nullable = false) // will create a bidirectional relationship with movie.
 	private Movie movie; // This will add a movie column in the table.
 	
 	
-	public Post() {
+	public MoviePost() {
 		super();
 	}
 
-	public Post(String userId, String body, List<String> images, List<Comment> comments, Movie movie) {
+	public MoviePost(String userId, String body, List<String> images, List<Comment> comments, Movie movie) {
 		super();
 		this.postId = new Random().ints(4, 0, 10).mapToObj(Integer::toString)
 			    .reduce((a, b) -> a + b).get();

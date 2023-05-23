@@ -1,26 +1,25 @@
 package com.app.tvshowtracker.model;
 
-
-import java.util.List;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class TvShow {
+public class TvShowEpisode {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(unique = true, nullable = false)
-	private String tvShowId;
-	
 	private String name;
+	
+	@Column(unique = true, nullable = false)
+	private String episodeId;
 	
 	private String rating;
 	
@@ -32,28 +31,22 @@ public class TvShow {
 	
 	private String description;
 	
-	private List<String> whereToWatch; 
+	@ManyToOne(cascade = CascadeType.ALL, targetEntity = TvShowSeason.class)
+	@JoinColumn(nullable = false)
+	private TvShowSeason season;
 	
-	private List<String> cast;
-	
-	private int noOfAdded;
-	
-	@OneToMany(mappedBy = "tvShow")
-	private List<TvShowSeason> seasons;
 
-
-	public TvShow(String tvShowId, String name, String rating, String poster, String duration, String releaseDate,
-			String description, List<String> whereToWatch, List<String> cast) {
+	public TvShowEpisode(String name, String episodeId, String rating, String poster, String duration,
+			String releaseDate, String description, TvShowSeason season) {
 		super();
-		this.tvShowId = tvShowId;
 		this.name = name;
+		this.episodeId = episodeId;
 		this.rating = rating;
 		this.poster = poster;
 		this.duration = duration;
 		this.releaseDate = releaseDate;
 		this.description = description;
-		this.whereToWatch = whereToWatch;
-		this.cast = cast;
+		this.season = season;
 	}
 
 	public Long getId() {
@@ -64,20 +57,20 @@ public class TvShow {
 		this.id = id;
 	}
 
-	public String getTvShowId() {
-		return tvShowId;
-	}
-
-	public void setTvShowId(String tvShowId) {
-		this.tvShowId = tvShowId;
-	}
-
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getEpisodeId() {
+		return episodeId;
+	}
+
+	public void setEpisodeId(String episodeId) {
+		this.episodeId = episodeId;
 	}
 
 	public String getRating() {
@@ -120,35 +113,11 @@ public class TvShow {
 		this.description = description;
 	}
 
-	public List<String> getWhereToWatch() {
-		return whereToWatch;
+	public TvShowSeason getSeason() {
+		return season;
 	}
 
-	public void setWhereToWatch(List<String> whereToWatch) {
-		this.whereToWatch = whereToWatch;
-	}
-
-	public List<String> getCast() {
-		return cast;
-	}
-
-	public void setCast(List<String> cast) {
-		this.cast = cast;
-	}
-
-	public int getNoOfAdded() {
-		return noOfAdded;
-	}
-
-	public void setNoOfAdded(int noOfAdded) {
-		this.noOfAdded = noOfAdded;
-	}
-
-	public List<TvShowSeason> getSeasons() {
-		return seasons;
-	}
-
-	public void setSeasons(List<TvShowSeason> seasons) {
-		this.seasons = seasons;
+	public void setSeason(TvShowSeason season) {
+		this.season = season;
 	}
 }

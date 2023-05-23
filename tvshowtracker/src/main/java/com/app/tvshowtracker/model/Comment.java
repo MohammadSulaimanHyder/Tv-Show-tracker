@@ -21,8 +21,12 @@ public class Comment {
 	private String comment;
 	
 	@ManyToOne
-	@JoinColumn(name = "postId", nullable = false)
-	private Post post;
+	@JoinColumn(name = "moviePost", nullable = false)
+	private MoviePost moviePost;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private TvShowPost tvShowPost;
 		
 
 	public Comment() {
@@ -30,11 +34,11 @@ public class Comment {
 	}
 
 
-	public Comment(String userId, String comment, Post post) {
+	public Comment(String userId, String comment, MoviePost moviePost) {
 		super();
 		this.userId = userId;
 		this.comment = comment;
-		this.post = post;
+		this.moviePost = moviePost;
 	}
 
 
@@ -58,12 +62,12 @@ public class Comment {
 	}
 
 
-	public Post getPost() {
-		return post;
+	public MoviePost getPost() {
+		return moviePost;
 	}
 
 
-	public void setPost(Post post) {
-		this.post = post;
+	public void setPost(MoviePost moviePost) {
+		this.moviePost = moviePost;
 	}
 }

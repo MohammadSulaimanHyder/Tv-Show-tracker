@@ -39,7 +39,7 @@ public class Movie {
 	//With this it states that which ever class is creating the relationship, let them handle the movie and posts.
 	//No post column will be added in the movie table.
 	@OneToMany(mappedBy = "movie") 
-	private List<Post> posts;
+	private List<MoviePost> posts;
 	
 	private int noOfAdded;
 	
@@ -149,11 +149,11 @@ public class Movie {
 		this.cast = cast;
 	}
 
-	public List<Post> getPosts() {
+	public List<MoviePost> getPosts() {
 		return posts;
 	}
 
-	public void setPosts(List<Post> posts) {
+	public void setPosts(List<MoviePost> posts) {
 		this.posts = posts;
 	}
 
