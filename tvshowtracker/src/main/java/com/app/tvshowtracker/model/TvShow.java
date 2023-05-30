@@ -36,6 +36,10 @@ public class TvShow {
 	
 	private List<String> cast;
 	
+	private List<String> genre;
+	
+	private String language;
+	
 	private int noOfAdded;
 	
 	@OneToMany(mappedBy = "tvShow")
@@ -43,7 +47,7 @@ public class TvShow {
 
 
 	public TvShow(String tvShowId, String name, String rating, String poster, String duration, String releaseDate,
-			String description, List<String> whereToWatch, List<String> cast) {
+			String description, List<String> whereToWatch, List<String> cast, List<String> genre, String language) {
 		super();
 		this.tvShowId = tvShowId;
 		this.name = name;
@@ -54,6 +58,8 @@ public class TvShow {
 		this.description = description;
 		this.whereToWatch = whereToWatch;
 		this.cast = cast;
+		this.genre = genre;
+		this.language = language;
 	}
 
 	public Long getId() {
@@ -150,5 +156,21 @@ public class TvShow {
 
 	public void setSeasons(List<TvShowSeason> seasons) {
 		this.seasons = seasons;
+	}
+
+	public List<String> getGenre() {
+		return genre;
+	}
+
+	public void setGenre(List<String> genre) {
+		this.genre = genre;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }
